@@ -1,18 +1,24 @@
-// Import Express
 const express = require("express");
 const app = express();
-
-// Import & Connexion DB
+const PORT = 3000;
+const cors = require("cors");
 const mongoose = require("./DB/mongoose");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+
+// Connexion DB
 require("dotenv/config");
 
-//Import Morgan
-const morgan = require("morgan");
-app.use(morgan("dev"));
+// Import Routes
+const authRoute = require("./routes/auth");
 
-// Import bodyParser
-const bodyParser = require("body-parser");
-app.use(bodyParser.json());
+//Middlewares & Routes
+app
+  .use(morgan("dev"))
+  .use(express.json())
+  .use(cors())
+  .use(bodyParser.json())
+  .use("/api/auth", authRoute);
 
 // Export app
 module.exports = app;
