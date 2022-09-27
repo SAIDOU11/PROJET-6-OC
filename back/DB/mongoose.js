@@ -11,5 +11,4 @@ mongoose
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 // Export mongoose
-
 module.exports = mongoose;

@@ -10,7 +10,7 @@ const bodyParser = require("body-parser");
 require("dotenv/config");
 
 // Import Routes
-const authRoute = require("./routes/auth");
+const authCtrl = require("./controllers/auth");
 
 //Middlewares & Routes
 app
@@ -18,7 +18,7 @@ app
   .use(express.json())
   .use(cors())
   .use(bodyParser.json())
-  .use("/api/auth", authRoute);
+  .use("/api/auth", authCtrl);
 
 // Export app
 module.exports = app;
