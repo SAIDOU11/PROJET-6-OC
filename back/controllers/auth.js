@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const { userValidation, loginValidation } = require("../routes/validation");
+const jwt = require("jsonwebtoken");
 
 router.post("/signup", async (req, res) => {
   // Validate data before making a user
@@ -12,8 +13,6 @@ router.post("/signup", async (req, res) => {
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist) {
     return res.status(403).json({ message: "Email already exists" });
-  } else {
-    res.status(201).json({ message: "Utilisateur créé" });
   }
 
   // Hash password
@@ -27,11 +26,16 @@ router.post("/signup", async (req, res) => {
   });
   user
     .save()
-    .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+    .then(() => res.status(201).json({ message: "User Created !" }))
     .catch((error) => res.status(400).json({ error }));
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", (req, res) => {
+  // Create and assign a token
+
+  const token = jwt.sign({ _id: req.body._id }, process.env.TOKEN_SECRET);
+  res.header("login-token", token);
+
   // Validate data before making a user
   const { error } = loginValidation(req.body);
   if (error) return res.status(403).send(error.details[0].message);
@@ -39,9 +43,8 @@ router.post("/login", async (req, res) => {
   // Check if the email exist
   User.findOne({ email: req.body.email })
     .then((user) => {
-      if (!user) {
+      if (!user)
         return res.status(401).json({ message: "Login/Password incorrect" });
-      }
 
       // Correct password
       bcrypt
@@ -50,11 +53,13 @@ router.post("/login", async (req, res) => {
           if (!valid) {
             return res
               .status(401)
-              .json({ message: "Login/Password incorrect" });
+              .json({ message: "Password/Login incorrect" });
           }
+
           res.status(200).json({
+            message: "User logged in !",
             userId: user._id,
-            token: "TOKEN",
+            token,
           });
         })
         .catch((error) => res.status(500).json({ error }));

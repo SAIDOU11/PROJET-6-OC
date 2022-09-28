@@ -11,14 +11,16 @@ require("dotenv/config");
 
 // Import Routes
 const authCtrl = require("./controllers/auth");
+const saucesCtrl = require("./controllers/sauces");
 
-//Middlewares & Routes
+//Middlewares & Routes Middlewares
 app
   .use(morgan("dev"))
   .use(express.json())
   .use(cors())
   .use(bodyParser.json())
-  .use("/api/auth", authCtrl);
+  .use("/api/auth", authCtrl)
+  .use("/api/sauces", saucesCtrl);
 
 // Export app
 module.exports = app;

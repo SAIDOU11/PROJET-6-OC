@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const uniquevalidator = require("mongoose-unique-validator");
-const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, max: 255, min: 6 },
