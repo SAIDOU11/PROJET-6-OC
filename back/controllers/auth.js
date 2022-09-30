@@ -4,36 +4,28 @@ const bcrypt = require("bcrypt");
 const { userValidation, loginValidation } = require("../routes/validation");
 const jwt = require("jsonwebtoken");
 
-router.post("/signup", async (req, res) => {
-  // Validate data before making a user
-  const { error } = userValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  // Check if the user is the DataBase
-  const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist) {
-    return res.status(403).json({ message: "Email already exists" });
-  }
-
+exports.signup = (req, res) => {
   // Hash password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  bcrypt
+    .hash(req.body.password, 10)
+    .then((hash) => {
+      const user = new User({
+        email: req.body.email,
+        password: hash,
+      });
+      user
+        .save()
+        .then(() => res.status(201).json({ message: "User Created ! !" }))
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
 
-  // Create user
-  const user = new User({
-    email: req.body.email,
-    password: hashedPassword,
-  });
-  user
-    .save()
-    .then(() => res.status(201).json({ message: "User Created !" }))
-    .catch((error) => res.status(400).json({ error }));
-});
-
-router.post("/login", (req, res) => {
+exports.login = (req, res) => {
   // Create and assign a token
-
-  const token = jwt.sign({ _id: req.body._id }, process.env.TOKEN_SECRET);
+  const token = jwt.sign({ _id: req.body._id }, process.env.TOKEN_SECRET, {
+    expiresIn: "24h",
+  });
   res.header("login-token", token);
 
   // Validate data before making a user
@@ -65,6 +57,4 @@ router.post("/login", (req, res) => {
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
-});
-
-module.exports = router;
+};

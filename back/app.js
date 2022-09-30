@@ -1,17 +1,19 @@
 const express = require("express");
-const app = express();
-const PORT = 3000;
 const cors = require("cors");
 const mongoose = require("./DB/mongoose");
 const morgan = require("morgan");
+const app = express();
+const PORT = 3000;
+const path = require("path");
+
 const bodyParser = require("body-parser");
 
 // Connexion DB
 require("dotenv/config");
 
 // Import Routes
-const authCtrl = require("./controllers/auth");
-const saucesCtrl = require("./controllers/sauces");
+const authRoute = require("./routes/auth");
+const saucesRoute = require("./routes/sauces");
 
 //Middlewares & Routes Middlewares
 app
@@ -19,8 +21,9 @@ app
   .use(express.json())
   .use(cors())
   .use(bodyParser.json())
-  .use("/api/auth", authCtrl)
-  .use("/api/sauces", saucesCtrl);
+  .use("/api/auth", authRoute)
+  .use("/api/sauces", saucesRoute)
+  .use("/images", express.static(path.join(__dirname, "images")));
 
 // Export app
 module.exports = app;
