@@ -4,7 +4,7 @@ const Joi = require("joi");
 
 const userValidation = (data) => {
   const schema = Joi.object({
-    email: Joi.string().min(6).required().email(),
+    email: Joi.string().min(3).required().email(),
     password: Joi.string().min(5).required(),
   });
   return schema.validate(data);
@@ -13,7 +13,10 @@ const userValidation = (data) => {
 const loginValidation = (data) => {
   const schema = Joi.object({
     email: Joi.string().min(6).required().email(),
-    password: Joi.string().min(5).required(),
+    password: Joi.string()
+      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .min(5)
+      .required(),
   });
   return schema.validate(data);
 };

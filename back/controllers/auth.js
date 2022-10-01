@@ -5,6 +5,10 @@ const { userValidation, loginValidation } = require("../routes/validation");
 const jwt = require("jsonwebtoken");
 
 exports.signup = (req, res) => {
+  // Validate data before making a user
+  const { error } = userValidation(req.body);
+  if (error) return res.status(403).json({ error });
+
   // Hash password
   bcrypt
     .hash(req.body.password, 10)
@@ -30,7 +34,7 @@ exports.login = (req, res) => {
 
   // Validate data before making a user
   const { error } = loginValidation(req.body);
-  if (error) return res.status(403).send(error.details[0].message);
+  if (error) return res.status(403).json({ error });
 
   // Check if the email exist
   User.findOne({ email: req.body.email })
