@@ -2,7 +2,7 @@ const Sauce = require("../models/Sauce");
 const fs = require("fs");
 
 exports.getAllSauces = (req, res) => {
-  // Retourne toutes les sauces renvoyer par la DB
+  // All the sauces from the DB
   Sauce.find()
     .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(400).json({ error }));
@@ -73,4 +73,61 @@ exports.deleteSauce = (req, res, next) => {
     .catch((error) => {
       res.status(500).json({ error });
     });
+};
+
+exports.likeDislikeSauce = (req, res, next) => {
+  const like = req.body.like;
+  const userId = req.body.userId;
+  const sauceId = req.params.id;
+
+  // switch .. case for 3 differents option
+  switch (like) {
+    // Case the user like the sauce.
+    case 1:
+      Sauce.updateOne(
+        { _id: sauceId },
+        { $push: { usersLiked: userId }, $inc: { likes: +1 } }
+      )
+        .then(() => res.status(200).json({ message: `Like` }))
+        .catch((error) => res.status(400).json({ error }));
+
+      break;
+    // Case the user don't have an opinion on the sauce.
+    case 0:
+      Sauce.findOne({ _id: sauceId })
+        .then((sauce) => {
+          if (sauce.usersLiked.includes(userId)) {
+            Sauce.updateOne(
+              { _id: sauceId },
+              { $pull: { usersLiked: userId }, $inc: { likes: -1 } }
+            )
+              .then(() => res.status(200).json({ message: "No opinion" }))
+              .catch((error) => res.status(400).json({ error }));
+          }
+          if (sauce.usersDisliked.includes(userId)) {
+            Sauce.updateOne(
+              { _id: sauceId },
+              { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } }
+            )
+              .then(() => res.status(200).json({ message: "No opinion" }))
+              .catch((error) => res.status(400).json({ error }));
+          }
+        })
+        .catch((error) => res.status(404).json({ error }));
+      break;
+    // Case user don't like the sauce.
+    case -1:
+      Sauce.updateOne(
+        { _id: sauceId },
+        { $push: { usersDisliked: userId }, $inc: { dislikes: +1 } }
+      )
+        .then(() => {
+          res.status(200).json({ message: `Don't like` });
+        })
+        .catch((error) => res.status(400).json({ error }));
+      break;
+
+    default:
+      error;
+  }
 };
