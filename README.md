@@ -2,11 +2,11 @@
 
 Projet 6 Openclassrooms.
 
-- Pour lancer le front PROJET-6-OC/front/ npm run start
+- Pour lancer le front PROJET-6-OC/front/ npm run start.
 
-- Pour le backend PROJET-6-OC/back/ nodemon
+- Pour le backend PROJET-6-OC/back/ nodemon.
 
-- Voici tous le s package utilisés pour ce projet
+- Voici tous le s package utilisés pour ce projet.
 
 "dependencies": {
 "bcrypt": "^5.0.1",
