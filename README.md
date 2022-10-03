@@ -1,10 +1,10 @@
-# PROJET-6-OC
+# Salif_Dieye_Saidou 1_code_102022
 
 Projet 6 Openclassrooms.
 
-- Pour lancer le front PROJET-6-OC/front/ npm run start.
+- Pour lancer le front Salif_Dieye_Saidou 1_code_102022/front/ npm run start.
 
-- Pour le backend PROJET-6-OC/back/ nodemon.
+- Pour le backend Salif_Dieye_Saidou 1_code_102022/back/ nodemon.
 
 - Voici tous les packages utilisés pour ce projet.
 
