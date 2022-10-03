@@ -6,7 +6,7 @@ Projet 6 Openclassrooms.
 
 - Pour le backend PROJET-6-OC/back/ nodemon.
 
-- Voici tous le s package utilisés pour ce projet.
+- Voici tous les packages utilisés pour ce projet.
 
 "dependencies": {
 "bcrypt": "^5.0.1",
