@@ -2,13 +2,14 @@
 
 Projet 6 Openclassrooms.
 
-- Pour lancer le front Salif_Dieye_Saidou 1_code_102022/front/ npm run start.
-
 - Pour le backend Salif_Dieye_Saidou 1_code_102022/back/ nodemon.
+
+- Pour lancer le front Salif_Dieye_Saidou 1_code_102022/front/ npm run start.
 
 - Voici tous les packages utilisés pour ce projet.
 
-"dependencies": {
+"dependencies":
+{
 "bcrypt": "^5.0.1",
 "body-parser": "^1.20.0",
 "cors": "^2.8.5",
@@ -21,7 +22,8 @@ Projet 6 Openclassrooms.
 "multer": "^1.4.5-lts.1"
 },
 
-"devDependencies": {
+"devDependencies":
+{
 "morgan": "^1.10.0",
 "nodemon": "^2.0.20"
 }

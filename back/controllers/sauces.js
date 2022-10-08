@@ -40,6 +40,7 @@ exports.createSauce = (req, res, next) => {
 };
 
 exports.updateSauce = (req, res, next) => {
+  //
   const sauceObject = req.file
     ? {
         ...JSON.parse(req.body.sauce),
@@ -48,19 +49,31 @@ exports.updateSauce = (req, res, next) => {
         }`,
       }
     : { ...req.body };
-
-  Sauce.updateOne(
-    { _id: req.params.id },
-    { ...sauceObject, _id: req.params.id }
-  )
-    .then(() => res.status(200).json({ message: "Sauce updated!" }))
-    .catch((error) => res.status(400).json({ error }));
+  Sauce.findOne({ _id: req.params.id }).then((sauce) => {
+    if (sauce.userId !== req.auth.userId) {
+      res.status(403).json({ error: "Unauthorized request" });
+    } else {
+      Sauce.updateOne(
+        { _id: req.params.id },
+        { ...sauceObject, _id: req.params.id }
+      )
+        .then(() => res.status(200).json({ message: "Sauce updated!" }))
+        .catch((error) => res.status(400).json({ error }));
+    }
+  });
 };
 
 exports.deleteSauce = (req, res, next) => {
   // Check if user is okay
   Sauce.findOne({ _id: req.params.id })
+
     .then((sauce) => {
+      if (!sauce) {
+        res.status(404).json({ error: "Sauce does not exist" });
+      }
+      if (sauce.userId !== req.auth.userId) {
+        res.status(403).json({ error: "Unauthorized request" });
+      }
       const filename = sauce.imageUrl.split("/images/")[1];
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
