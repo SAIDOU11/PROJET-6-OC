@@ -26,12 +26,6 @@ exports.signup = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  // Create and assign a token
-  const token = jwt.sign({ _id: req.body._id }, process.env.TOKEN_SECRET, {
-    expiresIn: "24h",
-  });
-  res.header("login-token", token);
-
   // Validate data before making a user
   const { error } = loginValidation(req.body);
   if (error) return res.status(403).json({ error });
@@ -51,11 +45,13 @@ exports.login = (req, res) => {
               .status(401)
               .json({ message: "Password/Login incorrect" });
           }
+          // Create and assign a token
 
           res.status(200).json({
-            message: "User logged in !",
             userId: user._id,
-            token,
+            token: jwt.sign({ userId: user._id }, process.env.TOKEN_SECRET, {
+              expiresIn: "24h",
+            }),
           });
         })
         .catch((error) => res.status(500).json({ error }));
